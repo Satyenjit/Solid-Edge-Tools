@@ -1,0 +1,41 @@
+        public IntPtr GetWindowHandle(string strwndTitle)
+        {
+            IntPtr wndHandle = new IntPtr();
+
+            // Get all running processes
+            Process[] processlist = Process.GetProcesses();
+
+            // Use this if you want any specific process. 
+            //Process[] processlist = Process.GetProcessesByName("AddToTeamcenter"); // ("edge");
+
+            if (processlist.Count() == 0)
+            {
+                MessageBox.Show("All SEEC Warnings Dismissed. Go back to ATT Dialog.",
+                            "No more SEEC Warning found", MessageBoxButtons.OK,
+                            MessageBoxIcon.Information);
+            }
+            else
+            {
+                foreach (Process proc in processlist)
+                {
+                    try
+                    {
+                        if (!proc.HasExited)
+                        {
+                            if (!String.IsNullOrEmpty(proc.MainWindowTitle) &&
+                                proc.MainWindowTitle.Contains(strwndTitle))
+                            {
+                                return wndHandle = proc.MainWindowHandle;
+                            }
+                        }
+
+                    }
+                    catch (System.Exception ex)
+                    {
+                        continue;
+                    }
+                }                
+            }
+
+            return wndHandle;
+        }
